@@ -1,0 +1,16 @@
+labelTaints:
+  - taint:
+      key: testKey
+      value: testValue
+      effect: NoSchedule
+    selector:
+      key: she.net/taint-me
+  - taint:
+      key: second
+      value: testValue
+      effect: NoSchedule
+    selector:
+      key: she.net/taint-me-please
+ignoreLabel:
+  key: ingore
+  value: test

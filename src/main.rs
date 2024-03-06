@@ -1,23 +1,39 @@
-use kube::{Api, runtime::watcher, runtime::WatchStreamExt};
-use k8s_openapi::api::core::v1::Node;
-use tokio_stream::StreamExt;
+use log::{error, info};
+use structured_logger::{async_json::new_writer, Builder};
+
+mod config;
+
+mod controller;
+use controller::controller;
 
 #[tokio::main]
 async fn main() {
-  let client = kube::Client::try_default().await.expect("a kubeconfig must be present");
-  let node_api: Api<Node> = Api::all(client);
+    init_logger();
+    let taint_config = config::TaintConfig::try_default();
 
-   let stream = watcher(node_api, watcher::Config::default()).applied_objects();
-   let mut stream = std::pin::pin!(stream);
+    if let Err(e) = taint_config {
+        error!("error loading configuration {}", e);
+        return;
+    }
 
-   let mut next = stream.try_next().await;
+    let taint_config = taint_config.unwrap();
 
-   while let Ok(Some(node)) = next {
-       println!("node change {}", node.metadata.name.or(Some("<no name specified>".to_string())).unwrap());
-        next = stream.try_next().await;
-   }
+    let client = match kube::Client::try_default().await {
+        Ok(client) => {
+            info!("client created");
+            client
+        }
+        Err(e) => {
+            error!("{}", e);
+            return;
+        }
+    };
 
-   if let Err(e) = next {
-       println!("{}", e)
-   }
+    controller(client, taint_config).await;
+}
+
+fn init_logger() {
+    Builder::with_level("info")
+        .with_target_writer("*", new_writer(tokio::io::stdout()))
+        .init();
 }
