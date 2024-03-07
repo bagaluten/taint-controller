@@ -37,7 +37,7 @@ impl std::fmt::Display for ConfigurationError {
 impl TaintConfig {
     pub fn try_default() -> Result<TaintConfig, ConfigurationError> {
         let config = Config::builder()
-            .add_source(config::File::with_name("taint-controller.yaml"))
+            .add_source(config::File::with_name("config/taint-controller.yaml"))
             .build().map_err(|e| ConfigurationError {
                 message: format!("Failed to load configuration: {}", e)
             })?;
