@@ -1,24 +1,31 @@
-# Use the official Rust base image to build the binary
 FROM rust:latest AS build
 
 WORKDIR /app
 
-# Copy only the manifest files first to cache dependencies
-COPY Cargo.toml Cargo.lock ./
 
-# Build a dummy project to cache dependencies
-RUN mkdir src && echo "fn main() {}" > src/main.rs && cargo build --release
-
-# Copy the source code and build the actual binary
-COPY src ./src
+COPY Cargo.toml Cargo.lock taint-controller.yaml .
+COPY src src
 RUN cargo build --release
 
-# Create a minimal image with just the binary
-FROM debian:buster-slim
+RUN cargo install --path .
 
-# Copy the binary from the build stage to the final image
-COPY --from=build /app/target/release/openstackrs /usr/local/bin/openstackrs
+# Final image
+FROM debian:stable-slim AS release
 
-# Set the entry point for the container
-ENTRYPOINT ["/usr/local/bin/openstackrs"]
+# Install openssl libraries
+RUN apt update \
+    && apt install -y libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN addgroup app \
+    && adduser --ingroup app --no-create-home app \
+    && chown -R app /app
+
+COPY --from=build --chown=app:app /usr/local/cargo/bin/openstackrs .
+
+USER app
+
+ENTRYPOINT ["/app/openstackrs"]
  
