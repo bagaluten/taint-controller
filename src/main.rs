@@ -37,6 +37,7 @@ async fn main() {
     info!("starting controller");
     controller(client, taint_config).await;
 
+    info!("controller stopped");
     log::logger().flush();
 }
 
