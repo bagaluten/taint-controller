@@ -21,7 +21,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/bagaluten/taint-controller
+          images: ghcr.io/bagaluten/taint-controller/controller
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
