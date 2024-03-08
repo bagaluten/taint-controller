@@ -3,7 +3,7 @@ FROM rust:latest AS build
 WORKDIR /app
 
 
-COPY Cargo.toml Cargo.lock taint-controller.yaml .
+COPY Cargo.toml Cargo.lock .
 COPY src src
 RUN cargo build --release
 
