@@ -1,5 +1,6 @@
 use log::{error, info};
-use structured_logger::{async_json::new_writer, Builder};
+use std::{io::stdout};
+use structured_logger::{json::new_writer, Builder};
 
 mod config;
 
@@ -43,6 +44,6 @@ async fn main() {
 
 fn init_logger() {
     Builder::with_level("info")
-        .with_target_writer("*", new_writer(tokio::io::stdout()))
+        .with_target_writer("*", new_writer(stdout()))
         .init();
 }
