@@ -1,5 +1,5 @@
 use log::{error, info};
-use std::{io::stdout};
+use std::io::stdout;
 use structured_logger::{json::new_writer, Builder};
 
 mod config;

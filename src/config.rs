@@ -2,7 +2,7 @@ use config::Config;
 use k8s_openapi::api::core::v1::Taint;
 
 // Represents a label with its value.
-#[derive(Debug, Clone, PartialEq, serde::Deserialize )]
+#[derive(Debug, Clone, PartialEq, serde::Deserialize)]
 pub struct Label {
     pub key: String,
     pub value: Option<String>,
@@ -18,7 +18,7 @@ pub struct TaintLabel {
 pub struct TaintConfig {
     #[serde(rename = "labelTaints")]
     pub label_taints: Vec<TaintLabel>,
-    
+
     #[serde(rename = "ignoreLabel")]
     pub igore_label: Option<Label>,
 }
@@ -38,13 +38,15 @@ impl TaintConfig {
     pub fn try_default() -> Result<TaintConfig, ConfigurationError> {
         let config = Config::builder()
             .add_source(config::File::with_name("config/taint-controller.yaml"))
-            .build().map_err(|e| ConfigurationError {
-                message: format!("Failed to load configuration: {}", e)
+            .build()
+            .map_err(|e| ConfigurationError {
+                message: format!("Failed to load configuration: {}", e),
             })?;
 
-        let taint_config: TaintConfig = config.try_deserialize().map_err(|e| ConfigurationError {
-            message: format!("Failed to parse configuration: {}", e)
-        })?;
+        let taint_config: TaintConfig =
+            config.try_deserialize().map_err(|e| ConfigurationError {
+                message: format!("Failed to parse configuration: {}", e),
+            })?;
 
         Ok(taint_config)
     }

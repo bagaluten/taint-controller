@@ -54,11 +54,11 @@ fn node_matches_labels(label: &Label, node: &Node) -> bool {
         None => return false,
     };
 
-    if label.value == None {
+    if label.value.is_none() {
         return true;
     }
 
-    return Some(entry) == label.value;
+    Some(entry) == label.value
 }
 
 async fn process_event_for_taint(
@@ -91,7 +91,7 @@ async fn process_event_for_taint(
         .await?;
     info!("taint added");
 
-    return Ok(());
+    Ok(())
 }
 
 fn contains_taint(taints: &Vec<Taint>, taint: &Taint) -> bool {
@@ -111,7 +111,7 @@ fn patch_taints(node: Node, taint: &Taint) -> Patch<Node> {
     let mut taints = node
         .spec
         .and_then(|spec| spec.taints.clone())
-        .unwrap_or(Vec::new());
+        .unwrap_or_default();
     taints.push(taint.clone());
     let patch = Node {
         metadata: ObjectMeta {
@@ -125,5 +125,5 @@ fn patch_taints(node: Node, taint: &Taint) -> Patch<Node> {
         }),
         status: None,
     };
-    return Patch::Apply(patch);
+    Patch::Apply(patch)
 }
