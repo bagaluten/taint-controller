@@ -16,7 +16,7 @@ k8s-openapi = { version = "0.19.0", features = ["v1_26"] }
 kube = { version = "0.85.0", features = ["runtime"] }
 log = { version = "0.4.21", features = ["kv_unstable", "kv_unstable_serde"] }
 serde = { version = "1.0.188", features = ["derive"] }
-serde_yaml = "0.9.25"
+serde_yaml = "0.9.34"
 structured-logger = "1.0.3"
 tokio = { version = "1.32.0", features = ["macros", "rt", "rt-multi-thread"] }
 tokio-stream = "0.1.14"
