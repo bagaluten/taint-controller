@@ -19,4 +19,4 @@ serde = { version = "1.0.209", features = ["derive"] }
 serde_yaml = "0.9.34"
 structured-logger = "1.0.3"
 tokio = { version = "1.40.0", features = ["macros", "rt", "rt-multi-thread"] }
-tokio-stream = "0.1.14"
+tokio-stream = "0.1.16"
