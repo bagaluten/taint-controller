@@ -74,10 +74,7 @@ async fn process_event_for_taint(
         }
     };
 
-    let taints = match spec.taints {
-        Some(taints) => taints,
-        None => Vec::new(),
-    };
+    let taints = spec.taints.unwrap_or_default();
 
     if contains_taint(&taints, taint) {
         debug!("taint already present");

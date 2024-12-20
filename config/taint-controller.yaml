@@ -11,6 +11,7 @@ labelTaints:
       effect: NoSchedule
     selector:
       key: maybit.de/taint-me-please
+      value:  foo
 ignoreLabel:
   key: ignore
   value: test
